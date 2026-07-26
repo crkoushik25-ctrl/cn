@@ -1,0 +1,76 @@
+import java.net.*;
+import java.io.*;
+
+public class Server {
+
+    public static void main(String[] args) throws Exception {
+
+        ServerSocket ss = new ServerSocket(5000);
+        System.out.println("Server Started...");
+        System.out.println("Waiting for Client...");
+
+        Socket s = ss.accept();
+        System.out.println("Client Connected");
+
+        DataInputStream in = new DataInputStream(s.getInputStream());
+
+        while (true) {
+            String frame = in.readUTF();
+
+            if (frame.equals("END"))
+                break;
+
+            System.out.println("Received Frame: " + frame);
+            System.out.println("Acknowledgement Sent");
+        }
+
+        s.close();
+        ss.close();
+    }
+}
+
+
+
+client
+
+import java.net.*;
+import java.io.*;
+import java.util.Scanner;
+
+public class Client {
+
+    public static void main(String[] args) throws Exception {
+
+        Socket s = new Socket("localhost", 5000);
+
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Number of Frames: ");
+        int n = sc.nextInt();
+
+        System.out.print("Enter Window Size: ");
+        int w = sc.nextInt();
+
+        int i = 1;
+
+        while (i <= n) {
+
+            System.out.print("Sending Frames: ");
+
+            for (int j = 0; j < w && i <= n; j++) {
+                System.out.print(i + " ");
+                out.writeUTF("Frame " + i);
+                i++;
+            }
+
+            System.out.println("\nAcknowledgement Received\n");
+        }
+
+        out.writeUTF("END");
+
+        out.close();
+        s.close();
+    }
+}

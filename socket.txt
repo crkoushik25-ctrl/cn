@@ -1,0 +1,45 @@
+import java.net.*;
+
+public class Program2b {
+
+    public static void server() {
+        try {
+            ServerSocket ss = new ServerSocket(5000);
+
+            System.out.println("Server Started");
+            System.out.println("Waiting for Client...");
+
+            Socket s = ss.accept();
+
+            System.out.println("Client Connected");
+            System.out.println("Client IP: " + s.getInetAddress());
+            System.out.println("Client Port: " + s.getPort());
+
+            s.close();
+            ss.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void client() {
+        try {
+            Thread.sleep(1000);
+
+            Socket s = new Socket("localhost", 5000);
+
+            System.out.println("Client Connected to Server");
+
+            s.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        new Thread(() -> server()).start();
+        new Thread(() -> client()).start();
+    }
+}

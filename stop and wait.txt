@@ -1,0 +1,65 @@
+import java.net.*;
+import java.io.*;
+
+public class Server1 {
+
+    public static void main(String[] args) throws Exception {
+
+        ServerSocket ss = new ServerSocket(5000);
+        System.out.println("Server Started...");
+        System.out.println("Waiting for Client...");
+
+        Socket s = ss.accept();
+        System.out.println("Client Connected");
+
+        DataInputStream in = new DataInputStream(s.getInputStream());
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+
+        while (true) {
+            String msg = in.readUTF();
+
+            if (msg.equals("END"))
+                break;
+
+            System.out.println("Received : " + msg);
+
+            out.writeUTF("ACK");
+            System.out.println("ACK Sent");
+        }
+
+        s.close();
+        ss.close();
+    }
+}
+
+
+client 
+
+import java.io.*;
+import java.net.*;
+
+public class Client1 {
+
+    public static void main(String[] args) throws Exception {
+
+        Socket s = new Socket("localhost", 5000);
+
+        DataInputStream in = new DataInputStream(s.getInputStream());
+        DataOutputStream out = new DataOutputStream(s.getOutputStream());
+
+        for (int i = 1; i <= 5; i++) {
+
+            System.out.println("Sending Frame " + i);
+
+            out.writeUTF("Frame " + i);
+
+            String ack = in.readUTF();
+
+            System.out.println("Received " + ack);
+        }
+
+        out.writeUTF("END");
+
+        s.close();
+    }
+}

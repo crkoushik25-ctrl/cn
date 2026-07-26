@@ -1,0 +1,70 @@
+import java.util.Scanner;
+
+public class CRC {
+
+    static String divide(String dividend, String divisor) {
+        int n = divisor.length();
+        char[] data = dividend.toCharArray();
+
+        for (int i = 0; i <= dividend.length() - n; i++) {
+            if (data[i] == '1') {
+                for (int j = 0; j < n; j++) {
+                    if (data[i + j] == divisor.charAt(j))
+                        data[i + j] = '0';
+                    else
+                        data[i + j] = '1';
+                }
+            }
+        }
+
+        String rem = "";
+        for (int i = dividend.length() - n + 1; i < dividend.length(); i++) {
+            rem += data[i];
+        }
+
+        return rem;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Sender Data : ");
+        String senderData = sc.next();
+
+        System.out.print("Enter Generator Polynomial : ");
+        String divisor = sc.next();
+
+        String dividend = senderData;
+
+        for (int i = 0; i < divisor.length() - 1; i++) {
+            dividend += "0";
+        }
+
+        String senderCRC = divide(dividend, divisor);
+        String codeword = senderData + senderCRC;
+
+        System.out.println("\nSender Data : " + senderData);
+        System.out.println("Sender CRC  : " + senderCRC);
+        System.out.println("Codeword Sent : " + codeword);
+
+        System.out.print("\nEnter Received Codeword : ");
+        String received = sc.next();
+
+        String remainder = divide(received, divisor);
+
+        String receiverData = received.substring(0, senderData.length());
+        String receiverCRC = received.substring(senderData.length());
+
+        System.out.println("\nReceiver Data : " + receiverData);
+        System.out.println("Receiver CRC  : " + receiverCRC);
+
+        if (remainder.matches("0+")) {
+            System.out.println("\nNo Error Detected");
+        } else {
+            System.out.println("\nError Detected");
+        }
+
+        sc.close();
+    }
+}
