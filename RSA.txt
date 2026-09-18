@@ -1,0 +1,42 @@
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class RSA {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Choose two prime numbers
+        BigInteger p = BigInteger.valueOf(61);
+        BigInteger q = BigInteger.valueOf(53);
+
+        // Calculate n = p * q
+        BigInteger n = p.multiply(q);
+
+        // Calculate Euler's Totient
+        BigInteger phi = p.subtract(BigInteger.ONE)
+                          .multiply(q.subtract(BigInteger.ONE));
+
+        // Choose public key e
+        BigInteger e = BigInteger.valueOf(17);
+
+        // Calculate private key d
+        BigInteger d = e.modInverse(phi);
+
+        System.out.print("Enter message (number): ");
+        BigInteger message = sc.nextBigInteger();
+
+        // Encryption: C = M^e mod n
+        BigInteger encrypted = message.modPow(e, n);
+
+        // Decryption: M = C^d mod n
+        BigInteger decrypted = encrypted.modPow(d, n);
+
+        System.out.println("Public Key  : (" + e + ", " + n + ")");
+        System.out.println("Private Key : (" + d + ", " + n + ")");
+        System.out.println("Original Message : " + message);
+        System.out.println("Encrypted Message: " + encrypted);
+        System.out.println("Decrypted Message: " + decrypted);
+
+        sc.close();
+    }
+}

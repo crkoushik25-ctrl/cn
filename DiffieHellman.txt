@@ -1,0 +1,52 @@
+import java.math.BigInteger;
+import java.util.Scanner;
+
+public class DiffieHellman {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        // Public values
+        BigInteger p = BigInteger.valueOf(23);
+        BigInteger g = BigInteger.valueOf(5);
+
+        // Private keys
+        BigInteger a = BigInteger.valueOf(6); // Alice
+        BigInteger b = BigInteger.valueOf(15); // Bob
+
+        // Alice's public key
+        BigInteger A = g.modPow(a, p);
+
+        // Bob's public key
+        BigInteger B = g.modPow(b, p);
+
+        // Shared secret calculated by Alice
+        BigInteger secretAlice = B.modPow(a, p);
+
+        // Shared secret calculated by Bob
+        BigInteger secretBob = A.modPow(b, p);
+
+        System.out.println("=== Diffie-Hellman Key Exchange ===");
+
+        System.out.println("Public Prime (p): " + p);
+        System.out.println("Public Base (g): " + g);
+
+        System.out.println("Alice's Private Key: " + a);
+        System.out.println("Alice's Public Key : " + A);
+
+        System.out.println("Bob's Private Key: " + b);
+        System.out.println("Bob's Public Key : " + B);
+
+        System.out.println("Alice's Shared Secret: " + secretAlice);
+        System.out.println("Bob's Shared Secret  : " + secretBob);
+
+        if (secretAlice.equals(secretBob)) {
+            System.out.println("Shared Secret Successfully Established!");
+        } else {
+            System.out.println("Shared Secret Mismatch!");
+        }
+
+        sc.close();
+    }
+}

@@ -1,0 +1,73 @@
+import java.util.Scanner;
+
+public class SubstitutionCipher {
+
+    // Encrypts plaintext using the given key
+    public static String encrypt(String plaintext, String key) {
+        StringBuilder ciphertext = new StringBuilder();
+        plaintext = plaintext.toUpperCase();
+
+        for (char ch : plaintext.toCharArray()) {
+            if (Character.isLetter(ch)) {
+                int index = ch - 'A';
+                ciphertext.append(key.charAt(index));
+            } else {
+                ciphertext.append(ch); // Keep non-letters unchanged
+            }
+        }
+        return ciphertext.toString();
+    }
+
+    // Decrypts ciphertext using the given key
+    public static String decrypt(String ciphertext, String key) {
+        StringBuilder plaintext = new StringBuilder();
+        ciphertext = ciphertext.toUpperCase();
+
+        for (char ch : ciphertext.toCharArray()) {
+            if (Character.isLetter(ch)) {
+                int index = key.indexOf(ch);
+                plaintext.append((char) ('A' + index));
+            } else {
+                plaintext.append(ch);
+            }
+        }
+        return plaintext.toString();
+    }
+
+    // Validates that the key is exactly 26 unique uppercase letters
+    public static boolean isValidKey(String key) {
+        if (key == null || key.length() != 26) return false;
+        key = key.toUpperCase();
+        boolean[] seen = new boolean[26];
+        for (char ch : key.toCharArray()) {
+            if (!Character.isLetter(ch)) return false;
+            int idx = ch - 'A';
+            if (seen[idx]) return false; // Duplicate letter
+            seen[idx] = true;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter 26-letter substitution key (A-Z, no repeats): ");
+        String key = sc.nextLine().toUpperCase();
+
+        if (!isValidKey(key)) {
+            System.out.println("Invalid key! Must be 26 unique letters A-Z.");
+            return;
+        }
+
+        System.out.print("Enter text to encrypt: ");
+        String plaintext = sc.nextLine();
+
+        String encrypted = encrypt(plaintext, key);
+        System.out.println("Encrypted: " + encrypted);
+
+        String decrypted = decrypt(encrypted, key);
+        System.out.println("Decrypted: " + decrypted);
+
+        sc.close();
+    }
+}

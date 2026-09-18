@@ -1,0 +1,53 @@
+import java.util.Scanner;
+
+public class CaesarCipher {
+
+    // Encrypts text using Caesar Cipher
+    public static String encrypt(String text, int shift) {
+        StringBuilder result = new StringBuilder();
+        shift = shift % 26; // Normalize shift to range 0-25
+
+        for (char ch : text.toCharArray()) {
+            if (Character.isUpperCase(ch)) {
+                char c = (char) ((ch - 'A' + shift + 26) % 26 + 'A');
+                result.append(c);
+            } else if (Character.isLowerCase(ch)) {
+                char c = (char) ((ch - 'a' + shift + 26) % 26 + 'a');
+                result.append(c);
+            } else {
+                result.append(ch); // Non-alphabetic characters remain unchanged
+            }
+        }
+        return result.toString();
+    }
+
+    // Decrypts text using Caesar Cipher
+    public static String decrypt(String text, int shift) {
+        return encrypt(text, -shift); // Decryption is just encryption with negative shift
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            System.out.print("Enter text: ");
+            String text = sc.nextLine();
+
+            System.out.print("Enter shift value (integer): ");
+            if (!sc.hasNextInt()) {
+                System.out.println("Invalid shift value. Must be an integer.");
+                return;
+            }
+            int shift = sc.nextInt();
+
+            String encrypted = encrypt(text, shift);
+            String decrypted = decrypt(encrypted, shift);
+
+            System.out.println("Encrypted: " + encrypted);
+            System.out.println("Decrypted: " + decrypted);
+
+        } finally {
+            sc.close();
+        }
+    }
+}
